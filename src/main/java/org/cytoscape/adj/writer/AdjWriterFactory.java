@@ -32,8 +32,9 @@ public class AdjWriterFactory implements CyNetworkViewWriterFactory {
 
         @Override
         public CyWriter createWriter(OutputStream out, CyNetworkView cnv) {
-                //return new AdjNetworkViewWriter(out, cnv);
-                // TODO  : update this
-                return null;
+            // TODO  : update this
+            //return new AdjNetworkViewWriter(out, cnv);
+            throw new UnsupportedOperationException("Not supported yet.");
         }
+
 }
