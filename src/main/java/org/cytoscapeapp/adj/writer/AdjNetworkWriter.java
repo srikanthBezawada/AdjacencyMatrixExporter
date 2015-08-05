@@ -42,6 +42,7 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
                 for(double[] row : adjMat){
                     for(double cell : row){
                         bWriter.write(new Double(cell).toString());
+                        bWriter.write("\t");
                     }
                     bWriter.newLine();   
                 }
