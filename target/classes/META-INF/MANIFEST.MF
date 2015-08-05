@@ -1,0 +1,31 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1438700979229
+Build-Jdk: 1.6.0_45
+Built-By: fshaik
+Bundle-Activator: org.cytoscapeapp.adj.internal.CyActivator
+Bundle-ManifestVersion: 2
+Bundle-Name: Adj Exporter
+Bundle-SymbolicName: org.cytoscapeapp.adj-exporter
+Bundle-Version: 1.0
+Created-By: Apache Maven Bundle Plugin
+Embed-Dependency: *;scope=!provided|test;groupId=!org.cytoscape;inline=t
+ rue
+Embed-Transitive: true
+Export-Package: org.cytoscapeapp.adj.writer;uses:="org.cytoscape.model,o
+ rg.cytoscape.work,org.cytoscape.task,org.cytoscape.io.write,org.cytosca
+ pe.view.model,org.cytoscape.io,org.slf4j";version="1.0",org.cytoscapeap
+ p.adj.internal;uses:="org.cytoscape.service.util,org.cytoscape.io.util,
+ org.cytoscapeapp.adj.writer,org.cytoscape.io";version="1.0"
+Import-Package: com.sun.java.swing.plaf.windows;resolution:=optional,jav
+ ax.security.auth.x500;resolution:=optional,javax.swing;resolution:=opti
+ onal,javax.swing.border;resolution:=optional,javax.swing.plaf;resolutio
+ n:=optional,javax.swing.plaf.metal;resolution:=optional,javax.swing.tex
+ t;resolution:=optional,org.cytoscape.io;resolution:=optional;version="[
+ 3.0,4)",org.cytoscape.io.util;resolution:=optional;version="[3.0,4)",or
+ g.cytoscape.io.write;resolution:=optional;version="[3.0,4)",org.cytosca
+ pe.model;resolution:=optional;version="[3.0,4)",org.cytoscape.service.u
+ til;resolution:=optional;version="[3.0,4)",org.cytoscape.task;resolutio
+ n:=optional;version="[3.0,4)",org.cytoscape.view.model;resolution:=opti
+ onal;version="[3.0,4)",org.cytoscape.work;resolution:=optional;version=
+ "[3.0,4)",org.slf4j;resolution:=optional;version="[1.5,2)"
+Tool: Bnd-1.50.0

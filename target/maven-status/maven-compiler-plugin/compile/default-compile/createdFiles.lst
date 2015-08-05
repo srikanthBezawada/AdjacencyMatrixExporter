@@ -1,0 +1,5 @@
+org\cytoscapeapp\adj\writer\EncodingUtil.class
+org\cytoscapeapp\adj\writer\AdjNetworkWriter.class
+org\cytoscapeapp\adj\writer\AdjWriterFactory.class
+org\cytoscapeapp\adj\internal\CyActivator.class
+org\cytoscapeapp\adj\writer\AdjNetworkViewWriter.class
