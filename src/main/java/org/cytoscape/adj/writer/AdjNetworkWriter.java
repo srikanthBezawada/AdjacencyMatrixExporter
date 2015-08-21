@@ -21,11 +21,14 @@ import org.cytoscape.work.TaskMonitor;
 public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 
 	private final OutputStream outputStream;
+        private final CyNetwork network;
         private double[][] adjMat;
+        private static final String DELIMETER = "\t";
+        
 	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network) {
 		super(network);
 		this.outputStream = outputStream;	
-                this.adjMat = createAdjMatrix(network);
+                this.network = network;
 	}
 
 	@Override
@@ -35,16 +38,32 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 			taskMonitor.setStatusMessage("Writing network adjacency matrix structure...");
 			taskMonitor.setProgress(-1.0);
 		}
+                // create adjacency matrix from the network
+                this.adjMat = createAdjMatrix(this.network);
                 //AdjNetworkSerializer adjSerializer = new AdjNetworkSerializer();
                 OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
                 BufferedWriter bWriter = new BufferedWriter(osWriter);
+                List<CyNode> nodeList = network.getNodeList();
                 
+                // Write the first line ( node names )
+                bWriter.write("NName");
+                bWriter.write(DELIMETER);
+                for(CyNode node : nodeList){
+                    bWriter.write(network.getRow(node).get(CyNetwork.NAME, String.class));
+                    bWriter.write(DELIMETER);
+                }
+                bWriter.newLine();
+                
+                int i=0;
                 for(double[] row : adjMat){
+                    bWriter.write(network.getRow(nodeList.get(i)).get(CyNetwork.NAME, String.class));
+                    bWriter.write(DELIMETER);
                     for(double cell : row){
-                        bWriter.write(new Double(cell).toString());
-                        bWriter.write("\t");
+                        bWriter.write(String.valueOf(new Double(cell).intValue()));
+                        bWriter.write(DELIMETER);
                     }
                     bWriter.newLine();   
+                    i++;
                 }
                
                 bWriter.close();        
@@ -52,6 +71,7 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 		outputStream.close();
 
 		if (taskMonitor != null) {
+                        taskMonitor.setTitle("Successfully written to the file!");
 			taskMonitor.setStatusMessage("Success.");
 			taskMonitor.setProgress(1.0);
 		}
