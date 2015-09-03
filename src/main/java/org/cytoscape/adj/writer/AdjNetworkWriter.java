@@ -23,12 +23,14 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 	private final OutputStream outputStream;
         private final CyNetwork network;
         private double[][] adjMat;
+        private final boolean needNodes;
         private static final String DELIMETER = "\t";
         
-	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network) {
+	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network, final boolean needNodes) {
 		super(network);
 		this.outputStream = outputStream;	
                 this.network = network;
+                this.needNodes = needNodes;
 	}
 
 	@Override
@@ -41,34 +43,52 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
                 // create adjacency matrix from the network
                 this.adjMat = createAdjMatrix(this.network);
                 //AdjNetworkSerializer adjSerializer = new AdjNetworkSerializer();
-                OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
-                BufferedWriter bWriter = new BufferedWriter(osWriter);
-                List<CyNode> nodeList = network.getNodeList();
-                
-                // Write the first line ( node names )
-                bWriter.write("NName");
-                bWriter.write(DELIMETER);
-                for(CyNode node : nodeList){
-                    bWriter.write(network.getRow(node).get(CyNetwork.NAME, String.class));
+                if(needNodes){
+                    OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
+                    BufferedWriter bWriter = new BufferedWriter(osWriter);
+                    List<CyNode> nodeList = network.getNodeList();
+
+                    // Write the first line ( node names )
+                    bWriter.write("NName");
                     bWriter.write(DELIMETER);
-                }
-                bWriter.newLine();
-                
-                int i=0;
-                for(double[] row : adjMat){
-                    bWriter.write(network.getRow(nodeList.get(i)).get(CyNetwork.NAME, String.class));
-                    bWriter.write(DELIMETER);
-                    for(double cell : row){
-                        bWriter.write(String.valueOf(new Double(cell).intValue()));
+                    for(CyNode node : nodeList){
+                        bWriter.write(network.getRow(node).get(CyNetwork.NAME, String.class));
                         bWriter.write(DELIMETER);
                     }
-                    bWriter.newLine();   
-                    i++;
+                    bWriter.newLine();
+
+                    int i=0;
+                    for(double[] row : adjMat){
+                        bWriter.write(network.getRow(nodeList.get(i)).get(CyNetwork.NAME, String.class));
+                        bWriter.write(DELIMETER);
+                        for(double cell : row){
+                            bWriter.write(String.valueOf(new Double(cell).intValue()));
+                            bWriter.write(DELIMETER);
+                        }
+                        bWriter.newLine();   
+                        i++;
+                    }
+
+                    bWriter.close();        
+                    osWriter.close();
+                    outputStream.close();
+                } else{
+                    OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
+                    BufferedWriter bWriter = new BufferedWriter(osWriter);
+
+                    for(double[] row : adjMat){
+                        for(double cell : row){
+                            bWriter.write(String.valueOf(new Double(cell).intValue()));
+                            bWriter.write(DELIMETER);
+                        }
+                        bWriter.newLine();   
+                    }
+
+                    bWriter.close();        
+                    osWriter.close();
+                    outputStream.close();
                 }
-               
-                bWriter.close();        
-                osWriter.close();
-		outputStream.close();
+                
 
 		if (taskMonitor != null) {
                         taskMonitor.setTitle("Successfully written to the file!");

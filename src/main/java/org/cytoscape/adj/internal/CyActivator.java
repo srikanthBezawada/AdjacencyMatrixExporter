@@ -24,10 +24,22 @@ public class CyActivator extends AbstractCyActivator {
     public void start(BundleContext bc) {
             final StreamUtil streamUtil = getService(bc, StreamUtil.class);
             final BasicCyFileFilter adjFilter = new BasicCyFileFilter(new String[] { "txt" },
-                            new String[] { "application" }, "Adjacency matrix", DataCategory.NETWORK, streamUtil);
-            final AdjWriterFactory adjWriterFactory = new AdjWriterFactory(adjFilter);
+                            new String[] { "application" }, "Adjacency matrix WITHOUT node names", DataCategory.NETWORK, streamUtil);
+            final BasicCyFileFilter adjFilterWithNodes = new BasicCyFileFilter(new String[] { "txt" },
+                            new String[] { "application" }, "Adjacency matrix WITH node names", DataCategory.NETWORK, streamUtil);
+            
+            boolean needNodes;
+            needNodes=false;
+            final AdjWriterFactory adjWriterFactory = new AdjWriterFactory(adjFilter, needNodes);
             final Properties adjWriterFactoryProperties = new Properties();
             adjWriterFactoryProperties.put(ID, "adjWriterFactory");
             registerAllServices(bc, adjWriterFactory, adjWriterFactoryProperties);
+            
+            needNodes = true;
+            final AdjWriterFactory adjWriterFactoryWithNodes = new AdjWriterFactory(adjFilterWithNodes, needNodes);
+            final Properties adjWriterFactoryPropertiesWithNodes = new Properties();
+            adjWriterFactoryPropertiesWithNodes.put(ID, "adjWriterFactoryWithNodes");
+            registerAllServices(bc, adjWriterFactoryWithNodes, adjWriterFactoryPropertiesWithNodes);
+            
     }
 }
