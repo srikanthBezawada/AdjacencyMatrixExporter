@@ -24,7 +24,8 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
         private final CyNetwork network;
         private double[][] adjMat;
         private final boolean needNodes;
-        private static final String DELIMETER = "\t";
+        public static final String DELIMETER = "\t";
+        public static final String NODE_NAME_HEADER = "NName";
         
 	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network, final boolean needNodes) {
 		super(network);
@@ -49,7 +50,7 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
                     List<CyNode> nodeList = network.getNodeList();
 
                     // Write the first line ( node names )
-                    bWriter.write("NName");
+                    bWriter.write(NODE_NAME_HEADER);
                     bWriter.write(DELIMETER);
                     for(CyNode node : nodeList){
                         bWriter.write(network.getRow(node).get(CyNetwork.NAME, String.class));

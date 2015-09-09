@@ -1,6 +1,7 @@
 target/*
 *.class
 bin/*
+bin
 .classpath
 .project
 nb-configuration.xml
