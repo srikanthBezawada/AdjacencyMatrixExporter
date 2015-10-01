@@ -1,9 +1,0 @@
-org\cytoscape\adj\reader\AdjNetworkReaderFactory.class
-org\cytoscape\adj\reader\AdjFileFilter.class
-org\cytoscape\adj\serializer\AdjNetworkSerializer.class
-org\cytoscape\adj\writer\EncodingUtil.class
-org\cytoscape\adj\internal\CyActivator.class
-org\cytoscape\adj\writer\AdjWriterFactory.class
-org\cytoscape\adj\writer\AdjNetworkWriter.class
-org\cytoscape\adj\reader\AdjNetworkReader.class
-org\cytoscape\adj\reader\visual\ReaderView.class
