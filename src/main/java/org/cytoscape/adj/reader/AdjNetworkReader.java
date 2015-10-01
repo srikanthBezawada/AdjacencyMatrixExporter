@@ -202,7 +202,7 @@ public class AdjNetworkReader extends AbstractCyNetworkReader  {
         
         // set node names;
         for(int i=1 ; i<=nodesInNewNetwork.size() ; i++){
-            CyNode node = nodesInNewNetwork.get(i);
+            CyNode node = nodesInNewNetwork.get(i-1);
             network.getRow(node).set(CyNetwork.NAME, NODE_NAME_PREFIX+i);
         }
         

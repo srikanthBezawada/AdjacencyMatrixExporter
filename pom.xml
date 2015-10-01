@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<properties>
-		<bundle.symbolicName>org.cytoscape.adj-exporter</bundle.symbolicName>
+		<bundle.symbolicName>org.cytoscape.adj-app</bundle.symbolicName>
 		<bundle.namespace>org.cytoscape.adj</bundle.namespace>
 		<cytoscape.api.version>3.1.1</cytoscape.api.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -12,10 +12,10 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.cytoscape</groupId>
-	<artifactId>adj-exporter</artifactId>
-	<version>1.1</version>
+	<artifactId>adj-app</artifactId>
+	<version>1.2</version>
 
-	<name>Adj Exporter</name>
+	<name>Adj-app</name>
 
 	<packaging>bundle</packaging>
 
