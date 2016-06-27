@@ -41,24 +41,48 @@ public class CyActivator extends AbstractCyActivator {
 
     public void start(BundleContext bc) {
             final StreamUtil streamUtil = getService(bc, StreamUtil.class);
-            final BasicCyFileFilter adjFilter = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
-                            new String[] { "application" }, "Adjacency matrix WITHOUT node names", DataCategory.NETWORK, streamUtil);
-            final BasicCyFileFilter adjFilterWithNodes = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
-                            new String[] { "application" }, "Adjacency matrix WITH node names", DataCategory.NETWORK, streamUtil);
+            final BasicCyFileFilter adjUnDirFilter = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
+                            new String[] { "application" }, "Adjacency matrix (undirected) WITHOUT node names", DataCategory.NETWORK, streamUtil);
+            final BasicCyFileFilter adjUnDirFilterWithNodes = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
+                            new String[] { "application" }, "Adjacency matrix (undirected) WITH node names", DataCategory.NETWORK, streamUtil);
             
-            boolean needNodes;
-            needNodes=false;
-            final AdjWriterFactory adjWriterFactory = new AdjWriterFactory(adjFilter, needNodes);
-            final Properties adjWriterFactoryProperties = new Properties();
-            adjWriterFactoryProperties.put(ID, "adjWriterFactory");
-            registerAllServices(bc, adjWriterFactory, adjWriterFactoryProperties);
+            final BasicCyFileFilter adjDirFilter = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
+                            new String[] { "application" }, "Adjacency matrix (directed) WITHOUT node names", DataCategory.NETWORK, streamUtil);
+            final BasicCyFileFilter adjDirFilterWithNodes = new BasicCyFileFilter(new String[] { FILE_EXTENSION },
+                            new String[] { "application" }, "Adjacency matrix (directed) WITH node names", DataCategory.NETWORK, streamUtil);
+            
+            boolean needNodes, isDirected;
+            needNodes = false;
+            isDirected = false;
+            
+            final AdjWriterFactory adjUnDirWriterFactory = new AdjWriterFactory(adjUnDirFilter, isDirected, needNodes);
+            final Properties adjUnDirWriterFactoryProperties = new Properties();
+            adjUnDirWriterFactoryProperties.put(ID, "adjWriterFactory");
+            registerAllServices(bc, adjUnDirWriterFactory, adjUnDirWriterFactoryProperties);
+            
+            isDirected = true;
+            
+            final AdjWriterFactory adjDirWriterFactory = new AdjWriterFactory(adjDirFilter, isDirected, needNodes);
+            final Properties adjDirWriterFactoryProperties = new Properties();
+            adjDirWriterFactoryProperties.put(ID, "adjWriterFactory");
+            registerAllServices(bc, adjDirWriterFactory, adjDirWriterFactoryProperties);
             
             needNodes = true;
-            final AdjWriterFactory adjWriterFactoryWithNodes = new AdjWriterFactory(adjFilterWithNodes, needNodes);
+            
+            final AdjWriterFactory adjDirWriterFactoryWithNodes = new AdjWriterFactory(adjDirFilterWithNodes, isDirected, needNodes);
             final Properties adjWriterFactoryPropertiesWithNodes = new Properties();
             adjWriterFactoryPropertiesWithNodes.put(ID, "adjWriterFactoryWithNodes");
             // TODO: Does it need to be changed to registerService()
-            registerAllServices(bc, adjWriterFactoryWithNodes, adjWriterFactoryPropertiesWithNodes);
+            registerAllServices(bc, adjDirWriterFactoryWithNodes, adjWriterFactoryPropertiesWithNodes);
+            
+            isDirected = false;
+            final AdjWriterFactory adjunDirWriterFactoryWithNodes = new AdjWriterFactory(adjUnDirFilterWithNodes, isDirected, needNodes);
+            final Properties adjunDirWriterFactoryPropertiesWithNodes = new Properties();
+            adjWriterFactoryPropertiesWithNodes.put(ID, "adjWriterFactoryWithNodes");
+            // TODO: Does it need to be changed to registerService()
+            registerAllServices(bc, adjunDirWriterFactoryWithNodes, adjunDirWriterFactoryPropertiesWithNodes);
+            
+            
             
             // get services for readers
             this.appAdapter = getService(bc, CyAppAdapter.class);

@@ -23,14 +23,16 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 	private final OutputStream outputStream;
         private final CyNetwork network;
         private double[][] adjMat;
+        private final boolean isDirected;
         private final boolean needNodes;
         public static final String DELIMETER = "\t";
         public static final String NODE_NAME_HEADER = "NName";
         
-	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network, final boolean needNodes) {
+	public AdjNetworkWriter(final OutputStream outputStream, final CyNetwork network, final boolean isDirected, final boolean needNodes) {
 		super(network);
 		this.outputStream = outputStream;	
                 this.network = network;
+                this.isDirected = isDirected;
                 this.needNodes = needNodes;
 	}
 
@@ -42,7 +44,12 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 			taskMonitor.setProgress(-1.0);
 		}
                 // create adjacency matrix from the network
-                this.adjMat = createAdjMatrix(this.network);
+                if(isDirected) {
+                    this.adjMat = createDirAdjMatrix(this.network);
+                } else{
+                    this.adjMat = createAdjMatrix(this.network);
+                }
+                
                 //AdjNetworkSerializer adjSerializer = new AdjNetworkSerializer();
                 if(needNodes){
                     OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
@@ -122,4 +129,39 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
             }
             return adjacencyMatrixOfNetwork;
         }
+        
+        
+        public static double[][] createDirAdjMatrix(CyNetwork network) {
+            //make an adjacencymatrix for the current network
+            int totalnodecount = network.getNodeList().size();
+            List<CyNode> nodeList = network.getNodeList();
+            CyTable edgeTable = network.getDefaultEdgeTable();
+            double[][] adjacencyMatrixOfNetwork = new double[totalnodecount][totalnodecount];
+            CyRow row;
+            int k = 0;
+            for (CyNode root : nodeList) {
+                List<CyNode> neighbors = network.getNeighborList(root, CyEdge.Type.DIRECTED);
+                for (CyNode neighbor : neighbors) {
+                    List<CyEdge> edges = network.getConnectingEdgeList(root, neighbor, CyEdge.Type.DIRECTED);
+                    if (edges.size() > 0) {
+                        row = edgeTable.getRow(edges.get(0).getSUID());
+                        try {
+                            adjacencyMatrixOfNetwork[k][nodeList.indexOf(neighbor)] = 1;
+                        } catch (Exception ex) {
+                        }
+                    }
+                }
+                k++;
+            }
+            return adjacencyMatrixOfNetwork;
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
 }

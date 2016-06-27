@@ -15,16 +15,18 @@ import org.cytoscape.view.model.CyNetworkView;
 public class AdjWriterFactory implements CyNetworkViewWriterFactory {
 	
 	private final CyFileFilter filter;
+        private final boolean isDirected;
         private final boolean needNodes;
 
-	public AdjWriterFactory(final CyFileFilter filter, final boolean needNodes) {
+	public AdjWriterFactory(final CyFileFilter filter, final boolean isDirected, final boolean needNodes) {
 		this.filter = filter;
+                this.isDirected = isDirected;
                 this.needNodes = needNodes;
 	}
 
 	@Override
 	public CyWriter createWriter(OutputStream outputStream, CyNetwork network) {
-		return new AdjNetworkWriter(outputStream, network, needNodes);
+		return new AdjNetworkWriter(outputStream, network, isDirected, needNodes);
 	}
 
 	@Override
