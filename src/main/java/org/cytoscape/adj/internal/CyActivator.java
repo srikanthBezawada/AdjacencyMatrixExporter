@@ -83,7 +83,7 @@ public class CyActivator extends AbstractCyActivator {
             registerAllServices(bc, adjunDirWriterFactoryWithNodes, adjunDirWriterFactoryPropertiesWithNodes);
             
             
-            
+            /*
             // get services for readers
             this.appAdapter = getService(bc, CyAppAdapter.class);
             final CyApplicationManager appMgr = getService(bc, CyApplicationManager.class);
@@ -97,6 +97,7 @@ public class CyActivator extends AbstractCyActivator {
             final VisualMappingManager visMgr = getService(bc, VisualMappingManager.class);
             final CyEventHelper eventHelper = getService(bc, CyEventHelper.class);
             // register readers
+            
             final CyFileFilter jgfReaderFilter = new AdjFileFilter(streamUtil);
             final AdjNetworkReaderFactory jgfReaderFactory = new AdjNetworkReaderFactory(
                 jgfReaderFilter, appMgr, cyNetworkViewFactory, cyNetworkFactory,
@@ -105,6 +106,7 @@ public class CyActivator extends AbstractCyActivator {
             final Properties jgfNetworkReaderFactoryProps = new Properties();
             jgfNetworkReaderFactoryProps.put(ID, "JGFNetworkReaderFactory");
             registerService(bc, jgfReaderFactory, InputStreamTaskFactory.class, jgfNetworkReaderFactoryProps);
+            */
             
     }
     

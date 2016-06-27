@@ -43,14 +43,8 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 			taskMonitor.setStatusMessage("Writing network adjacency matrix structure...");
 			taskMonitor.setProgress(-1.0);
 		}
-                // create adjacency matrix from the network
-                if(isDirected) {
-                    this.adjMat = createDirAdjMatrix(this.network);
-                } else{
-                    this.adjMat = createAdjMatrix(this.network);
-                }
+                this.adjMat = createAdjMatrix(this.network);
                 
-                //AdjNetworkSerializer adjSerializer = new AdjNetworkSerializer();
                 if(needNodes){
                     OutputStreamWriter osWriter = new OutputStreamWriter(outputStream, EncodingUtil.getEncoder()); 
                     BufferedWriter bWriter = new BufferedWriter(osWriter);
@@ -105,67 +99,25 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
 		}
 	}
         
-        public static double[][] createAdjMatrix(CyNetwork network) {
-            //make an adjacencymatrix for the current network
-            int totalnodecount = network.getNodeList().size();
+        public double[][] createAdjMatrix(CyNetwork network) {
             List<CyNode> nodeList = network.getNodeList();
-            CyTable edgeTable = network.getDefaultEdgeTable();
+            int totalnodecount = network.getNodeList().size();
             double[][] adjacencyMatrixOfNetwork = new double[totalnodecount][totalnodecount];
-            CyRow row;
-            int k = 0;
-            for (CyNode root : nodeList) {
-                List<CyNode> neighbors = network.getNeighborList(root, CyEdge.Type.ANY);
-                for (CyNode neighbor : neighbors) {
-                    List<CyEdge> edges = network.getConnectingEdgeList(root, neighbor, CyEdge.Type.ANY);
-                    if (edges.size() > 0) {
-                        row = edgeTable.getRow(edges.get(0).getSUID());
-                        try {
-                            adjacencyMatrixOfNetwork[k][nodeList.indexOf(neighbor)] = 1;
-                        } catch (Exception ex) {
-                        }
-                    }
-                }
-                k++;
+            List<CyEdge> edges = network.getEdgeList();
+            
+            for(CyEdge e : edges) {
+                CyNode a = e.getSource();
+                CyNode b = e.getTarget();
+                if(isDirected){ // -1 convention for now
+                    adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
+                    adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = -1;
+                } else{
+                    adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
+                    adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = 1;
+                } 
+                
             }
             return adjacencyMatrixOfNetwork;
         }
-        
-        
-        public static double[][] createDirAdjMatrix(CyNetwork network) {
-            //make an adjacencymatrix for the current network
-            int totalnodecount = network.getNodeList().size();
-            List<CyNode> nodeList = network.getNodeList();
-            CyTable edgeTable = network.getDefaultEdgeTable();
-            double[][] adjacencyMatrixOfNetwork = new double[totalnodecount][totalnodecount];
-            CyRow row;
-            int k = 0;
-            for (CyNode root : nodeList) {
-                List<CyNode> neighbors = network.getNeighborList(root, CyEdge.Type.DIRECTED);
-                for (CyNode neighbor : neighbors) {
-                    List<CyEdge> edges = network.getConnectingEdgeList(root, neighbor, CyEdge.Type.DIRECTED);
-                    if (edges.size() > 0) {
-                        CyNode a = edges.get(0).getSource();
-                        CyNode b = edges.get(0).getTarget();
-                        
-                        row = edgeTable.getRow(edges.get(0).getSUID());
-                        try {
-                            adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
-                            adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = -1;
-                        } catch (Exception ex) {
-                        }
-                    }
-                }
-                k++;
-            }
-            return adjacencyMatrixOfNetwork;
-        }
-        
-        
-        
-        
-        
-        
-        
-        
         
 }
