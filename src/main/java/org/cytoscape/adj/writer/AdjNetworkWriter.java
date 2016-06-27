@@ -144,9 +144,13 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
                 for (CyNode neighbor : neighbors) {
                     List<CyEdge> edges = network.getConnectingEdgeList(root, neighbor, CyEdge.Type.DIRECTED);
                     if (edges.size() > 0) {
+                        CyNode a = edges.get(0).getSource();
+                        CyNode b = edges.get(0).getTarget();
+                        
                         row = edgeTable.getRow(edges.get(0).getSUID());
                         try {
-                            adjacencyMatrixOfNetwork[k][nodeList.indexOf(neighbor)] = 1;
+                            adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
+                            adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = -1;
                         } catch (Exception ex) {
                         }
                     }
