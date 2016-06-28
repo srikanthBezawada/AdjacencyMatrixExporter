@@ -109,8 +109,14 @@ public class AdjNetworkWriter extends AbstractNetworkTask implements CyWriter {
                 CyNode a = e.getSource();
                 CyNode b = e.getTarget();
                 if(isDirected){ // -1 convention for now
-                    adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
-                    adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = -1;
+                    if(adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] == 0 && adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] == 0) {
+                        adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
+                        adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = -1;
+                    } else {
+                        adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
+                        adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = 1;
+                    }
+                    
                 } else{
                     adjacencyMatrixOfNetwork[nodeList.indexOf(a)][nodeList.indexOf(b)] = 1;
                     adjacencyMatrixOfNetwork[nodeList.indexOf(b)][nodeList.indexOf(a)] = 1;
